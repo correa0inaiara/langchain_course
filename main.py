@@ -1,26 +1,34 @@
-from dotenv import load_dotenv
-load_dotenv()
+import langchain_helper as lch
+import streamlit as st
 
-from langchain_groq import ChatGroq
-from langchain_core.prompts import ChatPromptTemplate
+st.title("Pets name generator")
 
-def generate_pet_name(animal_type: str, pet_color: str):
-    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7)
+user_animal_type = st.sidebar.selectbox("What is your pet?", ("Cat", "Dog", "Cow", "Hamster"))
+
+# user_pet_color = ""
+
+# animal_translation = {
+#     "Cat": "um gato",
+#     "Dog": "um cachorro", 
+#     "Cow": "uma vaca",
+#     "Hamster": "um hamster"
+# }
+
+# animal_type_for_prompt = animal_translation.get(user_animal_type, user_animal_type)
+
+if user_animal_type == "Cat":
+    user_pet_color = st.sidebar.text_area("What color is your cat?", max_chars=50)
     
-    prompt_template = ChatPromptTemplate.from_messages([
-        ("system", "Você é um assistente criativo para dar nomes a animais de estimação."),
-        ("user", "Eu tenho {animal_type} de cor {pet_color} e quero nomes legais para ele. Me sugira 5 nomes.")
-    ])
+if user_animal_type == "Dog":
+    user_pet_color = st.sidebar.text_area("What color is your dog?", max_chars=50)
     
-    chain = prompt_template | llm
+if user_animal_type == "Cow":
+    user_pet_color = st.sidebar.text_area("What color is your cow?", max_chars=50)
     
-    response = chain.invoke({"animal_type": animal_type, "pet_color": pet_color})
-
-    return response.content
-
-if __name__ == "__main__":
-    # print(generate_pet_name(animal_type="um cachorro"))
-    # print(generate_pet_name(animal_type="uma cachorra"))
-    # print(generate_pet_name(animal_type="um gato"))
-    # print(generate_pet_name(animal_type="uma gata"))
-    print(generate_pet_name(animal_type="uma vaca", pet_color="preta"))
+if user_animal_type == "Hamster":
+    user_pet_color = st.sidebar.text_area("What color is your hamster?", max_chars=50)
+    
+if user_pet_color:
+    response = lch.generate_pet_name(animal_type=user_animal_type, pet_color=user_pet_color)
+    st.subheader("Suggested names:")
+    st.write(response['pet_name'])
