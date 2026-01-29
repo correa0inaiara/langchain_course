@@ -2,14 +2,25 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate
 
-
-def generate_pet_name():
+def generate_pet_name(animal_type: str, pet_color: str):
     llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.7)
     
-    response = llm.invoke("Eu tenho um cachorro, uma cachorra, um gato e uma gata, e quero nomes legais para todos. Me sugira 5 nomes para cada um.")
+    prompt_template = ChatPromptTemplate.from_messages([
+        ("system", "Você é um assistente criativo para dar nomes a animais de estimação."),
+        ("user", "Eu tenho {animal_type} de cor {pet_color} e quero nomes legais para ele. Me sugira 5 nomes.")
+    ])
+    
+    chain = prompt_template | llm
+    
+    response = chain.invoke({"animal_type": animal_type, "pet_color": pet_color})
 
     return response.content
 
 if __name__ == "__main__":
-    print(generate_pet_name())
+    # print(generate_pet_name(animal_type="um cachorro"))
+    # print(generate_pet_name(animal_type="uma cachorra"))
+    # print(generate_pet_name(animal_type="um gato"))
+    # print(generate_pet_name(animal_type="uma gata"))
+    print(generate_pet_name(animal_type="uma vaca", pet_color="preta"))
