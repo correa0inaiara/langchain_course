@@ -1,4 +1,4 @@
-import langchain_helper as lch
+import pet_name_generator as png
 import streamlit as st
 
 st.title("Pets name generator")
@@ -29,6 +29,6 @@ if user_animal_type == "Hamster":
     user_pet_color = st.sidebar.text_area("What color is your hamster?", max_chars=50)
     
 if user_pet_color:
-    response = lch.generate_pet_name(animal_type=user_animal_type, pet_color=user_pet_color)
+    response = png.generate_pet_name(animal_type=user_animal_type, pet_color=user_pet_color)
     st.subheader("Suggested names:")
     st.write(response['pet_name'])
